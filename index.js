@@ -26,9 +26,41 @@ let phonebook = [
 	},
 ];
 
+const generateId = () => {
+    return Math.floor(Math.random() * (500 - 5) + 5)
+}
+
 // Return phonebook
 app.get("/api/persons", (request, response) => {
     response.json(phonebook)
+})
+
+// Return info of a single person
+app.get("/api/persons/:id", (request, response) => {
+    const id = Number(request.params.id)
+    const person = phonebook.find(person => person.id === id)
+    
+    person ? response.json(person) : response.status(404).end()
+})
+
+
+// Add a person to phonebook
+app.post("/api/persons", (request, response) => {
+    const person = {
+        id: generateId(),
+        name: request.body.name,
+        number: request.body.number
+    }
+
+    phonebook = phonebook.concat(person)
+    response.json(person)
+})
+
+// Delete a person from phonebook
+app.delete("/api/persons/:id", (request, response) => {
+    const id = Number(request.params.id)
+    phonebook = phonebook.filter(person => person.id === id)
+    response.status(204).end()
 })
 
 // Return info about phonebook
