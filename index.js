@@ -1,9 +1,14 @@
 const express = require("express");
 const app = express();
-const morgan = require('morgan')
+const morgan = require("morgan");
 
 app.use(express.json());
-app.use(morgan('tiny'))
+
+morgan.token("body", function (req) {
+	return JSON.stringify(req.body);
+});
+
+app.use(morgan(":method :url :response-time :body"));
 
 let phonebook = [
 	{
